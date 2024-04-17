@@ -1,40 +1,52 @@
 package com.portfolio.meeting.website.service;
 
 import com.portfolio.meeting.website.dao.PeopleRepository;
+import com.portfolio.meeting.website.dto.PeopleDto;
 import com.portfolio.meeting.website.entity.People;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.portfolio.meeting.website.mapper.PeopleMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class PeopleServiceImpl implements PeopleService{
+public class PeopleServiceImpl implements PeopleService {
 
-    @Autowired
-    private PeopleRepository peopleRepository;
+    private final PeopleRepository peopleRepository;
 
-    @Override
-    public List<People> getAllPeople() {
-        return peopleRepository.findAll();
+    private final PeopleMapper peopleMapper;
+
+    public PeopleServiceImpl(PeopleRepository peopleRepository, PeopleMapper peopleMapper) {
+        this.peopleRepository = peopleRepository;
+        this.peopleMapper = peopleMapper;
     }
 
     @Override
-    public void savePeople(People people) {peopleRepository.save(people);}
+    public List<PeopleDto> getAllPeople() {
+        return peopleRepository.findAll()
+                .stream()
+                .map(peopleMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
-    public People getPeople(int id) {
+    public PeopleDto savePeople(PeopleDto people) {
+        return peopleMapper
+                .toDto(peopleRepository
+                        .save(peopleMapper.toEntity(people)));
+    }
 
-        People people = null;
-        Optional<People> optional = peopleRepository.findById(id);
-        if(optional.isPresent()){
-            people = optional.get();
-        }
-        return people;
+    @Override
+    public Optional<People> getPeople(int id) {
+
+        return peopleRepository.findById(id);
+
     }
 
     @Override
     public void deletePeople(int id) {
         peopleRepository.deleteById(id);
     }
+
 }

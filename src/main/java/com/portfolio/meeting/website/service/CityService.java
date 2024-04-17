@@ -1,17 +1,19 @@
 package com.portfolio.meeting.website.service;
 
+import com.portfolio.meeting.website.dto.CityDto;
 import com.portfolio.meeting.website.entity.City;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CityService {
 
-    public List<City> getAllCities();
+    List<CityDto> getAllCities();
 
-    public void saveCity(City city);
+    CityDto saveCity(CityDto city);
 
-    public City getCity(int id);
+    Optional<City> getCity(int id);
 
-    public void deleteCity(int id);
+    void deleteCity(int id);
 
 }

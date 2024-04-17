@@ -1,37 +1,45 @@
 package com.portfolio.meeting.website.service;
 
 import com.portfolio.meeting.website.dao.HobbyRepository;
+import com.portfolio.meeting.website.dto.HobbyDto;
 import com.portfolio.meeting.website.entity.Hobby;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.portfolio.meeting.website.mapper.HobbyMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class HobbyServiceImpl implements HobbyService{
+public class HobbyServiceImpl implements HobbyService {
 
-    @Autowired
-    private HobbyRepository hobbyRepository;
+    private final HobbyRepository hobbyRepository;
+    private final HobbyMapper hobbyMapper;
 
-    @Override
-    public List<Hobby> getAllHobbies() {
-        return hobbyRepository.findAll();
+    public HobbyServiceImpl(HobbyRepository hobbyRepository, HobbyMapper hobbyMapper) {
+        this.hobbyRepository = hobbyRepository;
+        this.hobbyMapper = hobbyMapper;
     }
 
     @Override
-    public void saveHobby(Hobby hobby) {
-        hobbyRepository.save(hobby);
+    public List<HobbyDto> getAllHobbies() {
+        return hobbyRepository.findAll().
+                stream()
+                .map(hobbyMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Hobby getHobby(int id) {
-        Hobby hobby = null;
-        Optional<Hobby> optional = hobbyRepository.findById(id);
-        if(optional.isPresent()){
-            hobby = optional.get();
-        }
-        return hobby;
+    public HobbyDto saveHobby(HobbyDto hobby) {
+
+        return hobbyMapper
+                .toDto(hobbyRepository
+                        .save(hobbyMapper.toEntity(hobby)));
+    }
+
+    @Override
+    public Optional<Hobby> getHobby(int id) {
+        return hobbyRepository.findById(id);
     }
 
     @Override

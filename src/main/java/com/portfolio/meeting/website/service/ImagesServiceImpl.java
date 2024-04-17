@@ -1,37 +1,44 @@
 package com.portfolio.meeting.website.service;
 
 import com.portfolio.meeting.website.dao.ImagesRepository;
+import com.portfolio.meeting.website.dto.ImagesDto;
 import com.portfolio.meeting.website.entity.Images;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.portfolio.meeting.website.mapper.ImagesMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class ImagesServiceImpl implements ImagesService{
+public class ImagesServiceImpl implements ImagesService {
 
-    @Autowired
-    private ImagesRepository imagesRepository;
+    private final ImagesRepository imagesRepository;
+    private final ImagesMapper imagesMapper;
 
-    @Override
-    public List<Images> getAllImages() {
-        return imagesRepository.findAll();
+    public ImagesServiceImpl(ImagesRepository imagesRepository, ImagesMapper imagesMapper) {
+        this.imagesRepository = imagesRepository;
+        this.imagesMapper = imagesMapper;
     }
 
     @Override
-    public void saveImages(Images images) {
-        imagesRepository.save(images);
+    public List<ImagesDto> getAllImages() {
+        return imagesRepository.findAll()
+                .stream()
+                .map(imagesMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Images getImages(int id) {
-        Images images = null;
-        Optional<Images> optional = imagesRepository.findById(id);
-        if(optional.isPresent()){
-            images = optional.get();
-        }
-        return images;
+    public ImagesDto saveImages(ImagesDto images) {
+        return imagesMapper.
+                toDto(imagesRepository
+                        .save(imagesMapper.toEntity(images)));
+    }
+
+    @Override
+    public Optional<Images> getImages(int id) {
+        return imagesRepository.findById(id);
     }
 
     @Override

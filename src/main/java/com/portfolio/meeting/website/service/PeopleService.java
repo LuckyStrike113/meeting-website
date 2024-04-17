@@ -1,18 +1,19 @@
 package com.portfolio.meeting.website.service;
 
+import com.portfolio.meeting.website.dto.PeopleDto;
 import com.portfolio.meeting.website.entity.People;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PeopleService {
 
-    public List<People> getAllPeople();
+    List<PeopleDto> getAllPeople();
 
-    public void savePeople(People people);
+    PeopleDto savePeople(PeopleDto people);
 
-    public People getPeople(int id);
+    Optional<People> getPeople(int id);
 
-    public void deletePeople(int id);
-
+    void deletePeople(int id);
 
 }

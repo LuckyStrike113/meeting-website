@@ -1,18 +1,20 @@
 package com.portfolio.meeting.website.service;
 
 
+import com.portfolio.meeting.website.dto.ImagesDto;
 import com.portfolio.meeting.website.entity.Images;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ImagesService {
 
-    public List<Images> getAllImages();
+    List<ImagesDto> getAllImages();
 
-    public void saveImages(Images images);
+    ImagesDto saveImages(ImagesDto images);
 
-    public Images getImages(int id);
+    Optional<Images> getImages(int id);
 
-    public void deleteImages(int id);
+    void deleteImages(int id);
 
 }

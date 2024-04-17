@@ -1,15 +1,8 @@
 package com.portfolio.meeting.website.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.List;
 
 @Entity
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PUBLIC)
 @Table(name = "city")
 public class City {
 
@@ -21,7 +14,19 @@ public class City {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "city")
-    private List<People> people;
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

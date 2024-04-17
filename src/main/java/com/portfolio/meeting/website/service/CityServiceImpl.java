@@ -1,38 +1,44 @@
 package com.portfolio.meeting.website.service;
 
 import com.portfolio.meeting.website.dao.CityRepository;
+import com.portfolio.meeting.website.dto.CityDto;
 import com.portfolio.meeting.website.entity.City;
-import com.portfolio.meeting.website.entity.People;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.portfolio.meeting.website.mapper.CityMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class CityServiceImpl implements CityService{
+public class CityServiceImpl implements CityService {
 
-    @Autowired
-    private CityRepository cityRepository;
+    private final CityRepository cityRepository;
+    private final CityMapper cityMapper;
 
-    @Override
-    public List<City> getAllCities() {
-        return cityRepository.findAll();
+    public CityServiceImpl(CityRepository cityRepository, CityMapper cityMapper) {
+        this.cityRepository = cityRepository;
+        this.cityMapper = cityMapper;
     }
 
     @Override
-    public void saveCity(City city) {
-        cityRepository.save(city);
+    public List<CityDto> getAllCities() {
+        return cityRepository.findAll()
+                .stream()
+                .map(cityMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public City getCity(int id) {
-        City city = null;
-        Optional<City> optional = cityRepository.findById(id);
-        if(optional.isPresent()){
-            city = optional.get();
-        }
-        return city;
+    public CityDto saveCity(CityDto city) {
+        return cityMapper
+                .toDto(cityRepository
+                        .save(cityMapper.toEntity(city)));
+    }
+
+    @Override
+    public Optional<City> getCity(int id) {
+        return cityRepository.findById(id);
     }
 
     @Override

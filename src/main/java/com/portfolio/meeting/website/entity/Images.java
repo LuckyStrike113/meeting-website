@@ -1,13 +1,8 @@
 package com.portfolio.meeting.website.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PUBLIC)
 @Table(name = "images")
 public class Images {
 
@@ -19,7 +14,19 @@ public class Images {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @ManyToOne
-    private People people;
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
